@@ -18,25 +18,20 @@ public class TimeServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         resp.setContentType("text/html; charset=utf-8");
-        resp.getWriter().write("<h1>Current time on ${timezone} </h1>".replace("${timezone}", parseTimeZone(req)));
-        String time = ZonedDateTime
-                .now(ZoneOffset.ofHours(parseTime(req)))
-                .format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss '${timezone}'")).replace("${timezone}", parseTimeZone(req));
+
+        String tzParam = req.getParameter("timezone");
+        ZoneId zone;
+
+
+        zone = (tzParam == null || tzParam.isBlank())
+                ? ZoneOffset.UTC
+                : ZoneId.of(tzParam);
+        String zoneLabel = (tzParam == null || tzParam.isBlank()) ? "UTC" : zone.getId();
+
+        String time = ZonedDateTime.now(zone)
+                .format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")) + " " + zoneLabel;
+
+        resp.getWriter().write("<h1>Current time on " + zoneLabel + "</h1>");
         resp.getWriter().write(time);
-
-    }
-
-    private String parseTimeZone(HttpServletRequest request) {
-        if (request.getParameterMap().containsKey("timezone")) {
-            return request.getParameter("timezone");
-
-        } else return "UTC";
-    }
-
-    private int parseTime(HttpServletRequest request) {
-        if (request.getParameterMap().containsKey("timezone")) {
-            return Integer.parseInt(request.getParameter("timezone").replace("UTC", ""));
-
-        } else return 0;
     }
 }
