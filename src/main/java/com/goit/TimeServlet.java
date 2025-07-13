@@ -22,7 +22,6 @@ public class TimeServlet extends HttpServlet {
         String tzParam = req.getParameter("timezone");
         ZoneId zone;
 
-
         zone = (tzParam == null || tzParam.isBlank())
                 ? ZoneOffset.UTC
                 : ZoneId.of(tzParam);

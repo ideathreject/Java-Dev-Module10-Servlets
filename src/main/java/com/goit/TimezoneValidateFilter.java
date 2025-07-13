@@ -20,7 +20,14 @@ public class TimezoneValidateFilter extends HttpFilter {
             chain.doFilter(req, resp);
             return;
         }
+
         try {
+            timezone = timezone.replace("UTC", "");
+            if (Integer.parseInt(timezone) < -12 || Integer.parseInt(timezone) > 12) {
+                resp.setStatus(400);
+                resp.getWriter().write("Invalid timezone");
+                return;
+            }
             ZoneId.of(timezone);
             chain.doFilter(req, resp);
         } catch (DateTimeException e) {
