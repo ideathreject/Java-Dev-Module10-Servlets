@@ -30,7 +30,7 @@ public class TimeServlet extends HttpServlet {
         String time = ZonedDateTime.now(zone)
                 .format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")) + " " + zoneLabel;
 
-        resp.getWriter().write("<h1>Current time on " + zoneLabel + "</h1>");
+        resp.getWriter().write("<h1>Current time in " + zoneLabel + "</h1>");
         resp.getWriter().write(time);
     }
 }
